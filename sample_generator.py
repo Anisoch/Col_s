@@ -11,8 +11,6 @@ from initial_info import horizontal_lines
 import pygame as pg
 import json as j
 
-
-
 # словарь с данными о шаблоне
 from initial_info import sd
 
