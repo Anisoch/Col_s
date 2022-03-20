@@ -54,11 +54,11 @@ class GUI_COLS(Frame):
 # лейба\label
 		os.chdir('..')
 		os.chdir('samples')
-		lbl_sample = Label()
-		lbl_sample['text'] = (
+		self.lbl_sample = Label()
+		self.lbl_sample['text'] = (
 			'Выберите шаблон'+'\nпредъявления точек'
 								)
-		lbl_sample.place(
+		self.lbl_sample.place(
 						x=0,
 						y=40,
 						)
@@ -69,6 +69,7 @@ class GUI_COLS(Frame):
 								y=40)
 		self.cbox_samples.bind('<<ComboboxSelected>>',
 								self.preview_decription)
+
 
 # описание шаблона\sample description
 # лейба\label
@@ -260,11 +261,15 @@ class GUI_COLS(Frame):
 	
 # работа кнопки start
 	def start(self):
+		schk = self.check_sample()
+		if schk:
+			nchk = self.check_name()
+		else:
+			nchk = False
 
-		name = self.file_name.get()
-		nchk = self.check_name(name)
-		if nchk:
-			self.data['settings'] = self.cbox_settings.get()
+
+		if nchk and schk:
+			self.settings_download()
 			self.data['sample'] = self.cbox_samples.get()
 			self.data['mode'] = self.mode.get()
 			self.data['patient_name'] = self.patient_name.get()
@@ -275,8 +280,9 @@ class GUI_COLS(Frame):
 			root.quit()
 
 	def check_name(
-				self,
-				name):
+				self
+					):
+		name = self.file_name.get()
 		name = str(name) +'.json'
 		os.chdir('..')
 		os.chdir('results')
@@ -292,6 +298,26 @@ class GUI_COLS(Frame):
 		else:
 			self.data['file_name'] = name
 			return True
+
+	def check_sample(
+					self
+					):
+		if self.cbox_samples.get() == '':
+			self.lbl_sample['bg'] = 'red'
+			return False
+		else:
+			self.lbl_sample['bg'] = 'white'			
+			return True
+
+	def settings_download(
+						self
+							):
+		os.chdir('..')
+		os.chdir('settings')
+		print(os.getcwd())
+		print(self.cbox_settings.get())
+		with open(self.cbox_settings.get(), 'r') as settings_file:
+			self.data['settings'] = json.load(settings_file)
 
 
 
