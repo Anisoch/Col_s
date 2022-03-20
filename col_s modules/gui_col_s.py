@@ -35,7 +35,8 @@ class GUI_COLS(Frame):
 # выбор настроек\settigs choice
 # Лейба\Label
 		lbl_settings = Label()
-		lbl_settings['text'] = 'Задайте настройки (по умолчанию basic)'
+		lbl_settings['text'] = (
+			'Задайте настройки'+'\n(по умолчанию basic)')
 		lbl_settings.place(x=0,
 							y=0)
 # комбобокс\combobox
@@ -44,48 +45,54 @@ class GUI_COLS(Frame):
 		self.settings = os.listdir()
 		self.cbox_settings = Combobox(values= os.listdir())
 		self.cbox_settings.place(
-								x=250,
+								x=220,
 								y=0)
 		self.cbox_settings.current(0)	
 
 
 # выбор шаблона\sample choice 
 # лейба\label
-		lbl_sample = Label()
-		lbl_sample['text'] = 'Выберите шаблон предъявления точек'
-		lbl_sample.place(
-						x=0,
-						y=30,
-						)
-# комбобокс\combobox
 		os.chdir('..')
 		os.chdir('samples')
+		lbl_sample = Label()
+		lbl_sample['text'] = (
+			'Выберите шаблон'+'\nпредъявления точек'
+								)
+		lbl_sample.place(
+						x=0,
+						y=40,
+						)
+# комбобокс\combobox
 		self.cbox_samples = Combobox(values= os.listdir())
 		self.cbox_samples.place(
-								x=250,
-								y=30)
+								x=220,
+								y=40)
 		self.cbox_samples.bind('<<ComboboxSelected>>',
 								self.preview_decription)
 
 # описание шаблона\sample description
 # лейба\label
 		lbl_description = Label()
-		lbl_description.place(relx=0.5,
-							  y=60,
-							  anchor=N)
+		lbl_description.place(x=160,
+							  y=80,
+							  )
 		lbl_description['text'] = 'Описание шаблона'
 # текстовое поле описания\text field with description
-		self.description = Text(wrap=WORD)
+		self.description = Text(
+								wrap=WORD,
+								borderwidth = 3,
+         						relief="sunken"
+         						)
 		self.description.place(x=30,
-						  y=90,
-						  relwidth=0.85,
-						  relheight=0.3)
+							  y=100,
+							  width=400,
+							  height=150)
 # превьюшка шаблона
 # sample preview
 		lbl_preview = Label()
 		lbl_preview.place(
 							x=30,
-							y=240)
+							y=250)
 		lbl_preview['text'] = 'превью шаблона'
 
 		self.preview_spot = Frame(
@@ -105,27 +112,104 @@ class GUI_COLS(Frame):
 			root,
 			text='режим нарастания'+'\nяркости').place(
 														x=250,
-														y=240)
-		r_bttn_linear = Radiobutton(
+														y=250)
+		self.r_bttn_linear = Radiobutton(
 								self,
 								text= 'экспоненциальный',
 								variable=self.mode,
-								value='экспоненциальный').place(
-																x=250,
-																y=275)
+								value='экспоненциальный')
+		self.r_bttn_linear.place(
+							x=250,
+							y=295
+							)
 
-		r_bttn_imp = Radiobutton(
+		self.r_bttn_imp = Radiobutton(
 								self,
 								text= 'импульсный',
 								variable=self.mode,
-								value='импульсный').place(
-														x=250,
-														y=295)
+								value='импульсный')
+		self.r_bttn_imp.place(
+								x=250,
+								y=315
+							)
 
-# инициализация кнопки
+
+# рамка для ввода информации о пользователе
+		self.name_frame = Frame(
+							self,
+							borderwidth = 3,
+         					relief="sunken"
+         					)
+		self.name_frame.place(
+								x=435,
+								y=0,
+								width=280,
+								height=383
+								)
+# лейба: имя файла
+		self.lbl_file_name= Label(
+									self.name_frame,
+									text='Имя файла(желательно латиницей)'
+									)
+		self.lbl_file_name.place(
+								x=0,
+								y=0)
+# поле для ввода имени файла
+		self.file_name = Entry(
+									self.name_frame,
+									)
+		self.file_name.place(
+								x=0,
+								y=30,
+								relwidth=1
+								)
+
+# лейба: поле для ввода имени испытуемого
+		Label(
+			self.name_frame,
+			text='ФИО испытуемого'
+			).place(
+					x=0,
+					y=60)
+# поле для ввода имени испытуемого
+		self.patient_name = Entry(
+									self.name_frame,
+									)
+		self.patient_name.place(
+								x=0,
+								y=90,
+								relwidth=1
+								)
+
+# лейба: поле для описания эксперимента
+		Label(
+			self.name_frame,
+			text='Описание эксперимента'
+			).place(
+					x=0,
+					y=120)
+# Текстовое поле для ввода описания эксперимента
+		self.exp_description = Text(
+								self.name_frame,
+								borderwidth=3,
+								relief='ridge',
+								wrap=WORD
+									)
+		self.exp_description.place(
+									x=0,
+									y=150,
+									relwidth=1,
+									height=220
+									)
+
+
+
+
+# инициализация кнопки 
 		start_button = Button(
 								root,
-								text='start'
+								text='start',
+								command=self.start
 								).place( 
 										relx=0.5,
 										y=400)
@@ -133,9 +217,10 @@ class GUI_COLS(Frame):
 
 # блок функций которые выполняются окном
 
-
-
+# функции превьюшки
 	def preview_decription(self,event):
+		os.chdir('..')
+		os.chdir('samples')
 		with open(self.cbox_samples.get(), 'r') as read_file:
 			self.data = json.load(read_file)
 		self.preview(self.data)
@@ -157,12 +242,6 @@ class GUI_COLS(Frame):
 
 		size = data['dot_size']
 
-
-
-
-
-
-
 		for i in data['dot_coordinates'].values():
 			i = Label(preview).place(
 									x=i[0]/10,
@@ -170,6 +249,7 @@ class GUI_COLS(Frame):
 									width=size/10,
 									height=size/10
 									)
+
 	def sample_description(self,data):
 		'''Shows a description of a sample
 		выводит на текстовое поле описание шаблона'''
@@ -177,10 +257,47 @@ class GUI_COLS(Frame):
 		self.description.insert(2.0, "автор шаблона: " + data['author_name'] +
 	"\nописание: "+ data['description']+
 	'\nсоздан под разрешение экрана: '+str(data['res_x'])+'x'+str(data['res_y']))
-								
+	
+# работа кнопки start
+	def start(self):
+
+		name = self.file_name.get()
+		nchk = self.check_name(name)
+		if nchk:
+			self.data['settings'] = self.cbox_settings.get()
+			self.data['sample'] = self.cbox_samples.get()
+			self.data['mode'] = self.mode.get()
+			self.data['patient_name'] = self.patient_name.get()
+			self.data['exp_description'] = self.exp_description.get(1.0,END)
+			for i in self.data:
+				print(i,':',self.data[i])
+			print(os.getcwd())
+			root.quit()
+
+	def check_name(
+				self,
+				name):
+		name = str(name) +'.json'
+		os.chdir('..')
+		os.chdir('results')
+		files = os.listdir()
+		if name == '.json':
+			self.lbl_file_name['text'] = 'Задайте имя!'				
+			self.lbl_file_name['bg'] = 'red'
+			return False
+		elif name in files:
+			self.lbl_file_name['text'] = 'Имя файла занято'			
+			self.lbl_file_name['bg'] = 'red'
+			return False
+		else:
+			self.data['file_name'] = name
+			return True
+
+
+
 
 root = Tk()
-root.geometry('398x470')
+root.geometry('800x470')
 root.title('Col_s start')
 
 new = GUI_COLS(root)
