@@ -255,9 +255,11 @@ class GUI_COLS(Frame):
 		'''Shows a description of a sample
 		выводит на текстовое поле описание шаблона'''
 		self.description.delete(1.0, END)
-		self.description.insert(2.0, "автор шаблона: " + data['author_name'] +
-	"\nописание: "+ data['description']+
-	'\nсоздан под разрешение экрана: '+str(data['res_x'])+'x'+str(data['res_y']))
+		self.description.insert(2.0, "автор шаблона: " + 
+						data['author_name'] +
+						"\nописание: "+ data['description']+
+						'\nсоздан под разрешение экрана: '+
+						str(data['res_x'])+'x'+str(data['res_y']))
 	
 # работа кнопки start
 	def start(self):
@@ -276,7 +278,6 @@ class GUI_COLS(Frame):
 			self.data['exp_description'] = self.exp_description.get(1.0,END)
 			for i in self.data:
 				print(i,':',self.data[i])
-			print(os.getcwd())
 			root.quit()
 
 	def check_name(
@@ -314,8 +315,6 @@ class GUI_COLS(Frame):
 							):
 		os.chdir('..')
 		os.chdir('settings')
-		print(os.getcwd())
-		print(self.cbox_settings.get())
 		with open(self.cbox_settings.get(), 'r') as settings_file:
 			self.data['settings'] = json.load(settings_file)
 

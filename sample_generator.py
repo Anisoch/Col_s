@@ -112,4 +112,8 @@ sd['dot_coordinates'] = {i: list_of_coordinates[i]
 pg.quit()
 
 with open(sd['sample_name'], 'w') as write_file:
-	j.dump(sd ,write_file, indent=4)
+	j.dump(sd,
+			write_file,
+			indent=4,
+			ensure_ascii=False
+			)
